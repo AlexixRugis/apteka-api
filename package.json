@@ -1,0 +1,27 @@
+{
+  "name": "aptekaapi",
+  "version": "1.0.0",
+  "description": "api for apteka app",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "validate": "node validateDb.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "alexixrugis",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.4.3",
+    "body-parser": "^1.20.2",
+    "config": "^3.3.11",
+    "express": "^4.18.2",
+    "joi": "^17.12.2",
+    "save": "^2.9.0",
+    "sqlite3": "^5.1.7",
+    "swagger-jsdoc": "5.0.1",
+    "swagger-ui-express": "^5.0.0"
+  }
+}
