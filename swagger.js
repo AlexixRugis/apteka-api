@@ -219,6 +219,150 @@ module.exports = {
                     }
                 }
             }
+        },
+
+        "/api/medicines/writeoff": {
+            get: {
+                parameters: [
+                    {
+                        in: "header",
+                        name: "apikey",
+                        type: "string",
+                        required: true,
+                        description: "Ключ доступа к API"
+                    }
+                ],
+                description: "Получить массив доступных медикаментов.",
+                responses: {
+                    "200": {
+                        description: "OK",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                type: "array",
+                                    items: {
+                                        type: "object",
+                                        properties: {
+                                            product_id: {
+                                                description: "id медикамента.",
+                                                type: "integer",
+                                                example: 1
+                                            },
+                                            warehouse_id: {
+                                                description: "id склада.",
+                                                type: "integer",
+                                                example: 3
+                                            },
+                                            quantity: {
+                                                description: "Количество на складе.",
+                                                type: "integer",
+                                                example: 10
+                                            },
+                                            name: {
+                                                description: "Название медикамента.",
+                                                type: "string",
+                                                example: "Вольтарен 25мг/мл 3мл 5 шт. раствор для внутримышечного введения"
+                                            },
+                                            tradename: {
+                                                description: "Торговая марка.",
+                                                type: "string",
+                                                example: "Вольтарен"
+                                            },
+                                            manufacturer: {
+                                                description: "Производитель.",
+                                                type: "string",
+                                                example: "Новартис Фарма АГ"
+                                            },
+                                            image: {
+                                                description: "Путь к изображению (относительный URL на сервере).",
+                                                type: "string",
+                                                example: "images/voltaren.jpg"
+                                            },
+                                            price: {
+                                                description: "Цена товара.",
+                                                type: "integer",
+                                                example: "79"
+                                            },
+                                            optimal_quantity: {
+                                                description: "Оптимальное количество на складе.",
+                                                type: "integer",
+                                                example: "10"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        description: "Ключ API не был предоставлен"
+                    },
+                    "501": {
+                        description: "Непредвиденная ошибка сервера"
+                    }
+                }
+            },
+            post: {
+                parameters: [
+                    {
+                        in: "header",
+                        name: "apikey",
+                        type: "string",
+                        required: true
+                    },
+                ],
+                description: "Списать медикаменты со склада",
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    medicine_id: {
+                                        description: "id медикамента",
+                                        type: "integer",
+                                        example: 0,
+                                        required: true
+                                    },
+                                    quantity: {
+                                        description: "Количество, которое нужно списать",
+                                        type: "integer",
+                                        min: 1,
+                                        example: 5,
+                                        required: true
+                                    },
+                                    reason: {
+                                        description: "Причина списания",
+                                        type: "string",
+                                        min: 1, 
+                                        max: 120,
+                                        example: "просрочено",
+                                        required: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    "404": {
+                        description: "Медикамент не найден"
+                    },
+                    "401": {
+                        description: "Неверный ключ API"
+                    },
+                    "500": {
+                        description: "Ошибка сервера"
+                    },
+                    "400": {
+                        description: "Предоставлены неверные данные (неверный формат или на складе недостаточно медикаментов для списания)"
+                    },
+                    "200": {
+                        description: "Запрос выполнен успешно"
+                    }
+                }
+            }
         }
     }
 };
