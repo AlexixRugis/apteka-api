@@ -57,7 +57,7 @@ class DbModule {
                 const row = await this.#get(`SELECT id FROM products_users WHERE user_id = ? AND product_id = ?`, [u.id, p.id]);
                 if (row == null) {
                     const warehouse = warehouses[Math.floor(Math.random()*warehouses.length)];
-                    this.db.run(`INSERT INTO products_users (user_id, product_id, warehouse_id, quantity) VALUES (?, ?, ?, ?)`, [u.id, p.id, warehouse.id, 0]);
+                    this.db.run(`INSERT INTO products_users (user_id, product_id, warehouse_id, quantity) VALUES (?, ?, ?, ?)`, [u.id, p.id, warehouse.id, 20]);
                 }
             });
         });
