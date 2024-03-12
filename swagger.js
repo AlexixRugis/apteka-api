@@ -904,6 +904,148 @@ module.exports = {
                     }
                 }
             }
+        },
+
+        "/api/medicines/transfer": {
+            get: {
+                description: "Список перемещений медикаментов",
+                parameters: [
+                    {
+                        in: "header",
+                        name: "apikey",
+                        type: "string",
+                        required: true,
+                        description: "Ключ доступа к API"
+                    },
+                ],
+                responses: {
+                    "200": {
+                        description: "Запрос выполнен успешно",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    type: "array",
+                                    items: {
+                                        type: "object",
+                                        properties: {
+                                            id: {
+                                                description: "id операции",
+                                                type: "integer",
+                                                example: 1
+                                            },
+                                            createdTime: {
+                                                description: "Дата перемещения",
+                                                type: "string",
+                                                format: "date",
+                                                example: "2024-03-12T14:12:43.594Z"
+                                            },
+                                            product_id: {
+                                                description: "id медикамента",
+                                                type: "integer",
+                                                example: 1
+                                            },
+                                            warehouse_from: {
+                                                description: "id склада откуда перемещены медикаменты",
+                                                type: "integer",
+                                                example: 3
+                                            },
+                                            warehouse_to: {
+                                                description: "id склада куда перемещены медикаменты",
+                                                type: "integer",
+                                                example: 1
+                                            },
+                                            name: {
+                                                description: "Название медикамента",
+                                                type: "string",
+                                                example: "Вольтарен 25мг/мл 3мл 5 шт. раствор для внутримышечного введения"
+                                            },
+                                            tradename: {
+                                                description: "Торговая марка",
+                                                type: "string",
+                                                example: "Вольтарен"
+                                            },
+                                            manufacturer: {
+                                                description: "Производитель",
+                                                type: "string",
+                                                example: "Новартис Фарма АГ"
+                                            },
+                                            image: {
+                                                description: "Путь к изображению (относительный URL на сервере)",
+                                                type: "string",
+                                                example: "images/voltaren.jpg"
+                                            },
+                                            price: {
+                                                description: "Цена товара",
+                                                type: "integer",
+                                                example: 79
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        description: "Ошибка сервера"
+                    },
+                    "401": {
+                        description: "Неверный ключ API"
+                    }
+                }
+            },
+            post: {
+                description: "Переместить медикаменты на другой склад.",
+                parameters: [
+                    {
+                        in: "header",
+                        name: "apikey",
+                        type: "string",
+                        required: true,
+                        description: "Ключ доступа к API"
+                    },
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    medicine_id: {
+                                        description: "",
+                                        type: "integer",
+                                        required: true,
+                                        example: 1
+                                    },
+                                    warehouse_to: {
+                                        description: "",
+                                        type: "integer",
+                                        required: true,
+                                        example: 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    "404": {
+                        description: "Медикамент не найден или склад не найден"
+                    },
+                    "401": {
+                        description: "Неверный ключ API"
+                    },
+                    "500": {
+                        description: "Ошибка сервера"
+                    },
+                    "400": {
+                        description: "Предоставлены неверные данные (неверный формат или склад назначения совпадает с текущим)"
+                    },
+                    "200": {
+                        description: "Запрос выполнен успешно"
+                    }
+                }
+            }
         }
     }
 };
