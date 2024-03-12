@@ -230,7 +230,7 @@ module.exports = {
                         type: "string",
                         required: true,
                         description: "Ключ доступа к API"
-                    }
+                    },
                 ],
                 description: "Получить массив доступных медикаментов.",
                 responses: {
@@ -308,10 +308,11 @@ module.exports = {
                         in: "header",
                         name: "apikey",
                         type: "string",
-                        required: true
+                        required: true,
+                        description: "Ключ доступа к API"
                     },
                 ],
-                description: "Списать медикаменты со склада",
+                description: "Списать медикаменты со склада. Заявленные препараты будут изъяты со склада.",
                 requestBody: {
                     required: true,
                     content: {
@@ -360,6 +361,197 @@ module.exports = {
                     },
                     "200": {
                         description: "Запрос выполнен успешно"
+                    }
+                }
+            }
+        },
+
+        "/api/medicines/issues": {
+            get: {
+                parameters: [
+                    {
+                        in: "header",
+                        name: "apikey",
+                        type: "string",
+                        required: true,
+                        description: "Ключ доступа к API"
+                    },
+                ],
+                description: "Получить все заказы препаратов",
+                responses: {
+                    "200": {
+                        description: "Запрос выполнен успешно",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    type: "array",
+                                    items: {
+                                        type: "object",
+                                        properties: {
+                                            
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        description: "Ошибка сервера"
+                    },
+                    "401": {
+                        description: "Неверный ключ API"
+                    }
+                }
+            },
+            post: {
+                description: "Создать новый заказ препаратов. Заявленные препараты будут изъяты со склада.",
+                parameters: [
+                    {
+                        in: "header",
+                        name: "apikey",
+                        type: "string",
+                        required: true,
+                        description: "Ключ доступа к API"
+                    },
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                properties: {
+                                    purpose: {
+                                        type: "string",
+                                        min: 1,
+                                        max: 120,
+                                        required: true,
+                                        example: "Хирургическое отделение городской больницы"
+                                    },
+                                    items: {
+                                        type: "array",
+                                        items: {
+                                            type: "object",
+                                            properties: {
+                                                medicine_id: {
+                                                    type: "integer",
+                                                    required: true,
+                                                    example: 1
+                                                },
+                                                quantity: {
+                                                    type: "integer",
+                                                    min: 1,
+                                                    required: true,
+                                                    example: 5
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    "404": {
+                        description: "Медикамент не найден"
+                    },
+                    "401": {
+                        description: "Неверный ключ API"
+                    },
+                    "500": {
+                        description: "Ошибка сервера"
+                    },
+                    "400": {
+                        description: "Предоставлены неверные данные (неверный формат, или id медикаментов повторяются, или недостаточно медикаментов на складе)"
+                    },
+                    "200": {
+                        description: "Запрос выполнен успешно"
+                    }
+                }
+            }
+        },
+
+        "/api/medicines/issues/{issue_id}/complete": {
+            put: {
+                description: "Завершить заказ",
+                parameters: [
+                    {
+                        in: "header",
+                        name: "apikey",
+                        type: "string",
+                        required: true,
+                        description: "Ключ доступа к API"
+                    },
+                    {
+                        in: "path",
+                        name: "issue_id",
+                        type: "integer",
+                        required: true,
+                        description: "id заказа",
+                        example: 1
+                    }
+                ],
+                responses: {
+                    "200": {
+                        description: "Запрос выполнен успешно"
+                    },
+                    "400": {
+                        description: "Заказ уже завершён"
+                    },
+                    "404": {
+                        description: "Заказ с таким issue_id не найден"
+                    },
+                    "401": {
+                        description: "Неверный ключ API"
+                    },
+                    "500": {
+                        description: "Ошибка сервера"
+                    }
+                }
+            }
+        },
+
+        "/api/medicines/issues/{issue_id}": {
+            get: {
+                description: "Получить информацию о заказе",
+                parameters: [
+                    {
+                        in: "header",
+                        name: "apikey",
+                        type: "string",
+                        required: true,
+                        description: "Ключ доступа к API"
+                    },
+                    {
+                        in: "path",
+                        name: "issue_id",
+                        type: "integer",
+                        required: true,
+                        description: "id заказа",
+                        example: 1
+                    }
+                ],
+                responses: {
+                    "200": {
+                        description: "Запрос выполнен успешно",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    type: "object",
+                                    properties: {}
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        description: "Заказ с таким issue_id не найден"
+                    },
+                    "401": {
+                        description: "Неверный ключ API"
+                    },
+                    "500": {
+                        description: "Ошибка сервера"
                     }
                 }
             }
