@@ -280,6 +280,13 @@ class DbModule {
       }
 
       const items = await this.#all(`SELECT * FROM issue_requests_items JOIN products ON products.id = issue_requests_items.product_id WHERE issue_id = ?`, [issue_id]);
+      if (items != null) {
+        items.forEach((v)=> {
+          v.id = undefined;
+          v.issue_id = undefined;
+          v.optimal_quantity = undefined;
+        })
+      }
       data.user_id = undefined;
       data.items = items;
 
@@ -373,6 +380,13 @@ class DbModule {
       }
 
       const items = await this.#all(`SELECT * FROM products_invoices_items JOIN products ON products.id = products_invoices_items.product_id WHERE invoice_id = ?`, [invoice_id]);
+      if (items != null) {
+        items.forEach((v)=> {
+          v.id = undefined;
+          v.invoice_id = undefined;
+          v.optimal_quantity = undefined;
+        })
+      }
       data.user_id = undefined;
       data.items = items;
 
