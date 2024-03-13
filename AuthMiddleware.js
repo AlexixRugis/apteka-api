@@ -1,22 +1,17 @@
-class AuthMiddleware {
-    constructor(router, db) {
-        this.db = db;
-        this.router = router;
+const getUser = require('./services/getUser');
 
-        router.use(async (req, res, next) => {
-            const apiKey = req.header('apikey');
-            if (apiKey != null) {
-                const user = await db.getUser(apiKey);
-                if (user != null) {
-                    req.user = user;
-                    return next();
-                }                
-            }
+module.exports = (router) => {
+    router.use(async (req, res, next) => {
+        const apiKey = req.header('apikey');
+        if (apiKey != null) {
+            const user = await getUser(apiKey);
+            if (user != null) {
+                req.user = user;
+                return next();
+            }                
+        }
 
-            res.status(401);
-            return res.json({ message: "Incorrect key"});
-        });
-    }
-}
-
-module.exports = AuthMiddleware;
+        res.status(401);
+        return res.json({ message: "Incorrect key"});
+    });
+};
