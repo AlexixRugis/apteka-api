@@ -101,10 +101,10 @@ class DbModule {
     
     runBatchAsync = function (statements) {
       var results = [];
-      var batch = ['BEGIN', ...statements, 'COMMIT'];
+      var batch = ['BEGIN TRANSACTION', ...statements, 'COMMIT'];
       return batch.reduce((chain, statement) => chain.then(result => {
           results.push(result);
-          return this.db.runAsync(...[].concat(statement));
+          return this.runAsync(...[].concat(statement));
       }), Promise.resolve())
       .catch(err => this.runAsync('ROLLBACK').then(() => Promise.reject(err +
           ' in statement #' + results.length)))
